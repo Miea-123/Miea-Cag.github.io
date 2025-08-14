@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>卡谷氨酸详细分子机制图</title>
+<style>
+        body { font-family: "Alibaba PuHuiTi","阿里巴巴普惠体","Microsoft YaHei",Arial,sans-serif; margin: 0; padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 25px; }
+        .title { text-align: center; color: #2c3e50; font-size: 28px; font-weight: 800; margin-bottom: 20px; letter-spacing: 0.2px; }
+        .drug-info { text-align: center; background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 10px 14px;
+            border-radius: 12px; margin-bottom: 18px; font-size: 14px; font-weight: 700; box-shadow: 0 2px 6px rgba(118, 75, 162, 0.18); }
+        .molecular-targets { background: linear-gradient(135deg, #e8eaf6, #f3e5f5); color: #2c3e50; padding: 20px; border-radius: 15px; margin-bottom: 18px; border: 2px solid #667eea; }
+        .targets-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; text-align: center; }
+        .targets-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+        .target-item { 
+        position: relative;
+        background: rgba(255,255,255,0.34);
+        padding: 12px 12px 12px 16px; 
+        border-radius: 10px; 
+        backdrop-filter: blur(14px); 
+        border: 1px solid rgba(255,255,255,0.60);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+      }
+      .target-item::before{
+        content:"";
+        position:absolute; left:0; top:10px; bottom:10px; width:6px;
+        background: linear-gradient(180deg, #ff6d00, #e65100);
+        border-radius: 6px;
+      }
+      .target-item:hover{
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.14);
+      }
+      .molecular-targets .target-desc{ color:#495057; } 
+      .molecular-targets .target-name{ color:#2c3e50; } 
+        .target-name { font-weight: 700; margin-bottom: 6px; font-size: 16px; color:#2c3e50; }
+        .target-desc { font-size: 13px; line-height: 1.55; opacity: 0.95; }
+
+        .legend{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; background:#f8f9fa; border:1px solid #e9ecef; border-radius:10px; padding:12px 14px; margin-bottom:14px; }
+        .legend .item{ display:flex; align-items:center; gap:8px; color:#495057; font-size:13px; }
+        .legend .key{ width:10px; height:10px; border-radius:999px; }
+        .legend .key.strong{ background:#0d6efd; } .legend .key.moderate{ background:#20c997; } .legend .key.limited{ background:#f39c12; }
+        .badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:700; color:#fff; margin-left:8px; vertical-align:middle; }
+        .badge-strong { background:#764ba2; } .badge-moderate{ background:#667eea; } .badge-limited{ background:#e74c3c; }
+
+        .pathway-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+        .pathway-section { background: linear-gradient(145deg, #f8f9fa, #e9ecef); border-radius: 12px; padding: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border: 2px solid #dee2e6; }
+        .pathway-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 12px; text-align: center; padding: 10px; border-radius: 10px; }
+        .pathway-subtitle{ font-size:12px; color:#2c3e50; text-align:center; margin-top:-6px; margin-bottom: 8px; opacity:0.85; }
+
+        .urea-cycle-title { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .metabolism-title { background: linear-gradient(90deg, #27ae60, #229954); }
+        .clinical-title { background: linear-gradient(90deg, #8e44ad, #6c3483); }
+
+        .pathway-step { margin-bottom: 12px; padding: 12px; background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-left: 5px solid #007bff; transition: all 0.25s ease; }
+        .pathway-step:hover { transform: translateX(2px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        .urea-cycle .pathway-step { border-left-color: #667eea; }
+        .metabolism .pathway-step { border-left-color: #27ae60; }
+        .clinical .pathway-step { border-left-color: #8e44ad; }
+
+        .step-header { font-weight: 800; color: #2c3e50; margin-bottom: 6px; font-size: 16px; display: flex; align-items: center; gap: 10px; }
+        .step-number { background: linear-gradient(45deg, #007bff, #0056b3); color: white; width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; }
+        .urea-cycle .step-number { background: linear-gradient(45deg, #667eea, #764ba2); }
+        .metabolism .step-number { background: linear-gradient(45deg, #27ae60, #229954); }
+        .clinical .step-number { background: linear-gradient(45deg, #8e44ad, #6c3483); }
+
+        .pathway-details { color: #495057; font-size: 14px; line-height: 1.85; margin-left: 34px; }
+        .pathway-arrow { text-align: center; font-size: 18px; color: #007bff; margin: 6px 0; font-weight: 700; }
+
+        .molecule { background: linear-gradient(45deg, #c0392b, #a93226); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 800; margin: 0 2px; }
+        .enzyme { background: linear-gradient(45deg, #9b59b6, #8e44ad); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 800; margin: 0 2px; }
+        .pathway { background: linear-gradient(45deg, #e67e22, #d35400); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 800; margin: 0 2px; }
+
+        /* 新的传统降氨方案对比表格样式 */
+        .comparison-section { 
+            background: linear-gradient(135deg, #fff8e1, #f3e5f5); 
+            padding: 32px; 
+            border-radius: 20px; 
+            margin: 24px 0; 
+            border: 3px solid #ff9800; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        
+        .comparison-title { 
+            font-size: 24px; 
+            font-weight: 900; 
+            margin-bottom: 28px; 
+            text-align: center; 
+            color: #2c3e50; 
+            background: linear-gradient(45deg, #ff9800, #f57c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 16px 12px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 14px;
+            border-bottom: 2px solid #5a6cc2;
+        }
+
+        .comparison-table th:first-child {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            font-size: 15px;
+        }
+
+        .comparison-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background: #e8f4f8;
+            transform: scale(1.002);
+            transition: all 0.2s ease;
+        }
+
+        .comparison-table td:first-child {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            font-weight: 700;
+            color: #2c3e50;
+            border-right: 3px solid #667eea;
+        }
+
+        .drug-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            margin: 2px;
+            text-align: center;
+        }
+
+        .drug-tag.arginine { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .drug-tag.sodium-phenylbutyrate { background: linear-gradient(45deg, #f39c12, #e67e22); }
+        .drug-tag.lactulose { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+        .drug-tag.dialysis { background: linear-gradient(45deg, #34495e, #2c3e50); }
+        .drug-tag.lola { background: linear-gradient(45deg, #27ae60, #229954); }
+
+        .clinical-outcomes { background: linear-gradient(135deg, #667eea, #764ba2); padding: 18px; border-radius: 14px; }
+        .outcomes-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 12px; text-align: center; }
+        .outcomes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+        .outcome-item { background: white; padding: 12px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-left: 4px solid #667eea; }
+        .outcome-item.primary-outcome { border-left-width: 6px; }
+        .outcome-item.secondary-outcome { border-left-width: 3px; opacity: 0.94; }
+        .outcome-name { font-weight: 800; color: #2c3e50; margin-bottom: 4px; }
+        .outcome-desc { color: #7f8c8d; font-size: 14px; line-height: 1.75; }
+
+        /* Special styling for specific disease sections */
+        .disease-section { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px; border-radius: 10px; margin: 8px 0; }
+        .disease-title { font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+        .disease-desc { font-size: 13px; line-height: 1.6; opacity: 0.95; }
+
+        /* Enhanced epidemiology summary styles */
+        .epidemiology-summary { background: linear-gradient(135deg, #f8f9fa, #ffffff); padding: 28px; border-radius: 20px; box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
+        .summary-title { font-weight: 800; font-size: 22px; margin-bottom: 24px; text-align: center; color: #2c3e50; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+        .summary-card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.1); position: relative; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .summary-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+        .summary-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px; }
+        .summary-card.epidemiology::before { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .summary-card.clinical::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .summary-card.safety::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .card-icon { font-size: 40px; margin-bottom: 16px; display: block; }
+        .card-title { font-weight: 800; font-size: 18px; color: #2c3e50; margin-bottom: 12px; }
+        .card-content { font-size: 15px; line-height: 1.7; color: #495057; }
+        .highlight-number { font-weight: 800; font-size: 20px; margin: 0 2px; }
+        .summary-card.epidemiology .highlight-number { color: #667eea; }
+        .summary-card.clinical .highlight-number { color: #f5576c; }
+        .summary-card.safety .highlight-number { color: #00f2fe; }
+        .epidemiology-section { background: linear-gradient(135deg, #f8f9fa, #e9ecef); padding: 20px; border-radius: 15px; margin-bottom: 18px; border: 2px solid #6c757d; }
+        .epidemiology-title { font-size: 20px; font-weight: 800; margin-bottom: 16px; text-align: center; color: #2c3e50; }
+        .epidemiology-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+        
+        .epidemiology-item { background: white; padding: 16px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
+        .epidemiology-item.nagsd { border-left: 4px solid #e74c3c; }
+        .epidemiology-item.mma { border-left: 4px solid #f39c12; }
+        .epidemiology-item.pa { border-left: 4px solid #27ae60; }
+        .epidemiology-item.iva { border-left: 4px solid #8e44ad; }
+        
+        .disease-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .disease-icon { font-size: 24px; }
+        .disease-info { flex: 1; }
+        .disease-name-main { font-weight: 800; font-size: 16px; color: #2c3e50; }
+        .disease-name-sub { font-size: 12px; color: #6c757d; opacity: 0.8; }
+        
+        .prevalence-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; color: white; }
+        .prevalence-badge.critical { background: #e74c3c; }
+        .prevalence-badge.high { background: #f39c12; }
+        .prevalence-badge.moderate { background: #27ae60; }
+        
+        .disease-details { font-size: 13px; line-height: 1.5; }
+        .prevalence-info, .disease-burden { margin-bottom: 8px; }
+        .label { font-weight: 700; color: #495057; }
+        
+        /* Epidemiology section styles */
+
+        @media (max-width: 1100px){ 
+            .pathway-container{ grid-template-columns: 1fr; } 
+            .comparison-table { font-size: 12px; }
+            .comparison-table th, .comparison-table td { padding: 10px 8px; }
+        }
+</style>
+</head>
+<body>
+<div class="container">
+<h1 class="title">卡谷氨酸 (Carglumic Acid) 核心分子机制图</h1>
+<div class="drug-info">N-乙酰谷氨酸<span class="molecule">(NAG)</span>结构类似物 · 特异性激活<span class="enzyme">氨基甲酰磷酸合成酶-1 (CPS-1)</span>，重建尿素循环，高效降氨</div>
+
+<div class="molecular-targets">
+<div class="targets-title">主要分子靶点与作用机制</div>
+<div class="targets-grid">
+<div class="target-item">
+<div class="target-name">氨基甲酰磷酸合成酶-1激活<span class="badge badge-strong">核心</span></div>
+<div class="target-desc">卡谷氨酸作为<span class="molecule">NAG</span>结构类似物，特异性激活<span class="enzyme">CPS-1</span>酶活性→启动尿素循环第一步反应→将<span class="molecule">NH₃</span>转化为<span class="molecule">氨基甲酰磷酸</span>。</div>
+</div>
+<div class="target-item">
+<div class="target-name">尿素循环重建</div>
+<div class="target-desc">激活<span class="enzyme">CPS-1</span>→<span class="molecule">氨基甲酰磷酸</span>→<span class="molecule">瓜氨酸</span>→<span class="molecule">精氨酸琥珀酸</span>→<span class="molecule">精氨酸</span>→<span class="molecule">尿素</span>，完整重建氨解毒通路。</div>
+</div>
+<div class="target-item">
+<div class="target-name">疾病特异性机制</div>
+<div class="target-desc">针对<span class="pathway">NAGSD</span>直接补充缺失的NAG活性；针对<span class="pathway">MMA/PA/IVA</span>有机酸血症，在高氨血症发作时激活被抑制的尿素循环。</div>
+</div>
+<div class="target-item">
+<div class="target-name">快速降氨效应</div>
+<div class="target-desc">口服3小时达峰→快速激活<span class="enzyme">CPS-1</span>→尿素循环启动→血氨快速下降（平均1-2天恢复正常）→避免神经系统不可逆损伤。</div>
+</div>
+</div>
+</div>
+
+<div class="epidemiology-section">
+<div class="epidemiology-title">罕见病流行病学背景与疾病负担</div>
+<div class="epidemiology-grid">
+<div class="epidemiology-item nagsd">
+<div class="disease-header">
+<div class="disease-icon">🧬</div>
+<div class="disease-info">
+<div class="disease-name-main">NAGSD</div>
+<div class="disease-name-sub">N-乙酰谷氨酸合成酶缺乏症</div>
+</div>
+<div class="prevalence-badge critical">极罕见</div>
+</div>
+<div class="disease-details">
+<div class="prevalence-info">
+<span class="label">流行病学：</span>全球仅少数病例报道，总体发病率不明，在中国基本无现存患者
+</div>
+<div class="disease-burden">
+<span class="label">疾病负担：</span>存活率极低，是最罕见的尿素循环障碍，卡谷氨酸是唯一特效治疗
+</div>
+</div>
+</div>
+
+<div class="epidemiology-item mma">
+<div class="disease-header">
+<div class="disease-icon">🔬</div>
+<div class="disease-info">
+<div class="disease-name-main">MMA</div>
+<div class="disease-name-sub">甲基丙二酸血症</div>
+</div>
+<div class="prevalence-badge high">患病率11.6/100万</div>
+</div>
+<div class="disease-details">
+<div class="prevalence-info">
+<span class="label">流行病学：</span>中国发病率约1/86000，其中42.7%会发生高氨血症，预估约1248名患者
+</div>
+<div class="disease-burden">
+<span class="label">疾病负担：</span>98%为儿童，85%于1岁内起病，40%神经认知损伤，25%死亡率
+</div>
+</div>
+</div>
+
+<div class="epidemiology-item pa">
+<div class="disease-header">
+<div class="disease-icon">⚗️</div>
+<div class="disease-info">
+<div class="disease-name-main">PA</div>
+<div class="disease-name-sub">丙酸血症</div>
+</div>
+<div class="prevalence-badge high">患病率6-7/100万</div>
+</div>
+<div class="disease-details">
+<div class="prevalence-info">
+<span class="label">流行病学：</span>中国发病率0.6-0.7/10万，按42.7%高氨血症发生率计算，预估约646名患者
+</div>
+<div class="disease-burden">
+<span class="label">疾病负担：</span>多数患儿1个月内起病，急性期表现为喂养困难、反复呕吐、嗜睡
+</div>
+</div>
+</div>
+
+<div class="epidemiology-item iva">
+<div class="disease-header">
+<div class="disease-icon">🧪</div>
+<div class="disease-info">
+<div class="disease-name-main">IVA</div>
+<div class="disease-name-sub">异戊酸血症</div>
+</div>
+<div class="prevalence-badge moderate">患病率6.25/100万</div>
+</div>
+<div class="disease-details">
+<div class="prevalence-info">
+<span class="label">流行病学：</span>中国发病率约1/160000，按42.7%高氨血症发生率计算，预估约673名患者
+</div>
+<div class="disease-burden">
+<span class="label">疾病负担：</span>超半数新生儿期发生急性脑病，可致脑损伤、智力发育落后
+</div>
+</div>
+</div>
+</div>
+<div class="epidemiology-summary">
+<div class="summary-title">🎯 核心治疗价值与临床意义</div>
+<div class="summary-grid">
+<div class="summary-card epidemiology">
+<div class="card-icon">📊</div>
+<div class="card-title">流行病学特征</div>
+<div class="card-content">
+4个罕见病，中国约<span class="highlight-number">2567</span>名患者，以<span class="highlight-number">98%</span>儿童为主，<span class="highlight-number">85%</span>于1岁内起病，致残致死率高达<span class="highlight-number">25-40%</span>
+</div>
+</div>
+
+<div class="summary-card clinical">
+<div class="card-icon">⚡</div>
+<div class="card-title">临床突破价值</div>
+<div class="card-content">
+全球首个CPS-1特异性激活剂，填补4个罕见病治疗空白，快速降氨<span class="highlight-number">1-2天</span>恢复正常，减少急诊<span class="highlight-number">51%</span>，避免透析风险
+</div>
+</div>
+
+<div class="summary-card safety">
+<div class="card-icon">🛡️</div>
+<div class="card-title">安全性验证</div>
+<div class="card-content">
+全球<span class="highlight-number">50+</span>国家上市，超<span class="highlight-number">20年</span>临床经验，FDA/EMA孤儿药认定，中国真实世界研究证实安全性良好，不良反应多与基础疾病相关
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="pathway-container">
+<!-- 尿素循环机制 -->
+<div class="pathway-section urea-cycle">
+<div class="pathway-title urea-cycle-title">🔄 尿素循环激活机制 <span class="badge badge-strong">核心</span></div>
+<div class="pathway-subtitle">核心：特异性激活CPS-1，重建尿素循环，高效氨解毒</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">1</div> NAG结构类似物作用</div>
+<div class="pathway-details">卡谷氨酸作为<span class="molecule">N-乙酰谷氨酸(NAG)</span>的结构类似物→结合并激活<span class="enzyme">CPS-1</span>酶→替代内源性NAG的变构激活功能。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">2</div> CPS-1酶催化反应启动</div>
+<div class="pathway-details"><span class="enzyme">CPS-1</span>被激活→催化<span class="molecule">NH₃ + CO₂ + 2ATP</span>→<span class="molecule">氨基甲酰磷酸 + 2ADP + Pi</span>→启动尿素循环第一步关键反应。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">3</div> 尿素循环完整重建</div>
+<div class="pathway-details"><span class="molecule">氨基甲酰磷酸</span>→<span class="enzyme">鸟氨酸氨基甲酰转移酶</span>→<span class="molecule">瓜氨酸</span>→<span class="molecule">精氨酸琥珀酸</span>→<span class="molecule">精氨酸</span>→<span class="enzyme">精氨酸酶</span>→<span class="molecule">尿素</span>排出。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">4</div> 快速降氨效应</div>
+<div class="pathway-details">血氨快速下降：平均28.9小时(中国研究)至2.4天(国际研究)恢复正常→避免氨毒性脑病→保护神经系统功能。</div>
+</div>
+</div>
+
+<div class="pathway-section metabolism">
+<div class="pathway-title metabolism-title">🧬 疾病特异性作用机制 <span class="badge badge-strong">精准</span></div>
+<div class="pathway-subtitle">针对不同罕见病的特异性分子机制</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">1</div> NAGSD（N-乙酰谷氨酸合成酶缺乏症）</div>
+<div class="pathway-details"><span class="enzyme">NAGS酶</span>基因缺陷→无法合成<span class="molecule">NAG</span>→<span class="enzyme">CPS-1</span>失活→卡谷氨酸直接替代NAG功能，是NAGSD的特效治疗药物。</div>
+</div>
+<div class="disease-section">
+<div class="disease-title">💊 NAGSD特异性机制</div>
+<div class="disease-desc">NAGSD患者完全缺乏内源性NAG合成能力，卡谷氨酸作为外源性NAG类似物，直接补充缺失功能，是唯一的特效治疗选择，需要长期治疗维持。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">2</div> 有机酸血症（MMA/PA/IVA）急性期</div>
+<div class="pathway-details">有机酸蓄积→抑制<span class="enzyme">CPS-1</span>活性→尿素循环障碍→高氨血症→卡谷氨酸克服抑制，重新激活尿素循环。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">3</div> 急性高氨血症快速控制</div>
+<div class="pathway-details">急性期短期使用→快速降氨→控制脑水肿风险→避免透析治疗→缩短住院时间→减少急诊就诊51%。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">4</div> 个体化精准治疗</div>
+<div class="pathway-details">根据血氨水平个体化调整剂量：急性期100-250mg/kg/天，维持期10-100mg/kg/天，<strong>必须监测血氨水平指导治疗</strong>。</div>
+</div>
+</div>
+
+<!-- 临床应用与获益 -->
+<div class="pathway-section clinical">
+<div class="pathway-title clinical-title">🏥 临床应用与患者获益 <span class="badge badge-strong">突破</span></div>
+<div class="pathway-subtitle">填补临床空白，显著改善患者预后</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">1</div> 全球首个特异性CPS-1激活剂</div>
+<div class="pathway-details">首个获批的特异性尿素循环激活药物→填补4个罕见病（<span class="pathway">NAGSD/MMA/PA/IVA</span>）治疗空白→替代既往无效的对症治疗。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">2</div> 儿童友好制剂设计</div>
+<div class="pathway-details">分散片剂型→入水快速分散→可口服或鼻饲给药→三刻痕设计便于剂量调节→适用于新生儿至成人全年龄段患者。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">3</div> 显著临床获益</div>
+<div class="pathway-details">挽救生命：快速降氨避免氨毒性脑病；保护神经：减少不可逆损伤；减少医疗资源：避免透析、缩短住院、减少急诊51%。</div>
+</div>
+<div class="pathway-arrow">↓</div>
+<div class="pathway-step">
+<div class="step-header"><div class="step-number">4</div> 长期安全性验证</div>
+<div class="pathway-details">全球50+国家上市，超20年临床使用经验→国内外权威指南一致推荐→安全性良好，大部分不良反应与基础疾病相关。</div>
+</div>
+</div>
+</div>
+
+<div class="comparison-section">
+<div class="comparison-title">💊 卡谷氨酸 vs 传统降氨方案全面对比分析</div>
+
+<table class="comparison-table">
+<thead>
+<tr>
+<th style="width: 12%;">对比维度</th>
+<th style="width: 17.6%;">
+<div class="drug-tag arginine">精氨酸</div>
+</th>
+<th style="width: 17.6%;">
+<div class="drug-tag sodium-phenylbutyrate">苯丁酸钠</div>
+</th>
+<th style="width: 17.6%;">
+<div class="drug-tag lactulose">乳果糖</div>
+</th>
+<th style="width: 17.6%;">
+<div class="drug-tag dialysis">血液透析</div>
+</th>
+<th style="width: 17.6%;">
+<div class="drug-tag lola">卡谷氨酸</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主要作用机制</td>
+<td>提供尿素循环底物</td>
+<td>与谷氨酸结合形成苯乙酰谷氨酸，尿排含氮废物</td>
+<td>酸化肠道，抑制产氨菌</td>
+<td>直接清除血液中氨</td>
+<td>NAG类似物，特异性激活CPS-1，重建尿素循环</td>
+</tr>
+<tr>
+<td>降氨速度</td>
+<td>中等</td>
+<td>中等</td>
+<td>慢（24-48h）</td>
+<td>极快</td>
+<td>快（1-2天恢复正常）</td>
+</tr>
+<tr>
+<td>降氨幅度稳定性</td>
+<td>中等</td>
+<td>中等</td>
+<td>依赖肠改善程度变化大</td>
+<td>过速但短期</td>
+<td>大且稳定</td>
+</tr>
+<tr>
+<td>适应人群</td>
+<td>尿素循环功能尚可者</td>
+<td>代谢缺陷或特定高氨血症</td>
+<td>便秘型肝性脑病</td>
+<td>急危重症</td>
+<td>NAGSD/MMA/PA/IVA罕见病特效治疗</td>
+</tr>
+<tr>
+<td>额外临床获益</td>
+<td>无显著额外获益</td>
+<td>无显著额外获益</td>
+<td>缓解便秘</td>
+<td>暂无</td>
+<td>神经保护，避免不可逆损伤</td>
+</tr>
+<tr>
+<td>安全性/耐受性</td>
+<td>中等</td>
+<td>中等</td>
+<td>腹泻、腹胀、脱水</td>
+<td>创伤性高</td>
+<td>良好，副作用轻微</td>
+</tr>
+<tr>
+<td>给药方式</td>
+<td>静脉</td>
+<td>静脉</td>
+<td>口服</td>
+<td>血液透析</td>
+<td>口服/鼻饲（分散片）</td>
+</tr>
+<tr>
+<td>循证证据</td>
+<td>有限</td>
+<td>有限</td>
+<td>大量预防/治疗慢性型HE证据</td>
+<td>急危重症个案/小规模</td>
+<td>50+国家获批，20年临床验证</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="clinical-outcomes">
+<div class="outcomes-title">临床效应与分子基础</div>
+<div class="outcomes-grid">
+<div class="outcome-item primary-outcome">
+<div class="outcome-name">💉 快速降氨（特效）</div>
+<div class="outcome-desc">特异性激活CPS-1 → 重建尿素循环 → 血氨快速下降至正常水平（平均1-2天）。</div>
+</div>
+<div class="outcome-item primary-outcome">
+<div class="outcome-name">🧠 神经保护（关键）</div>
+<div class="outcome-desc">避免氨毒性脑病、脑水肿、脑疝 → 保护神经系统功能 → 减少认知功能损伤和发育障碍。</div>
+</div>
+<div class="outcome-item primary-outcome">
+<div class="outcome-name">🏥 减少医疗资源消耗</div>
+<div class="outcome-desc">避免血液透析 → 缩短住院时间 → 减少急诊就诊51% → 降低医疗成本。</div>
+</div>
+<div class="outcome-item primary-outcome">
+<div class="outcome-name">🎯 NAGSD特效治疗</div>
+<div class="outcome-desc">全球唯一获批的NAGSD特效药物，直接替代缺失的NAG功能，维持患者生命。</div>
+</div>
+<div class="outcome-item primary-outcome">
+<div class="outcome-name">👶 儿童适用性优势</div>
+<div class="outcome-desc">分散片设计 → 多种给药途径 → 新生儿可用 → 剂量调节精确 → 安全性良好。</div>
+</div>
+<div class="outcome-item">
+<div class="outcome-name">📚 权威指南推荐</div>
+<div class="outcome-desc">中国《罕见病诊疗指南》、欧洲诊疗指南等权威推荐，循证医学证据充分。</div>
+</div>
+<div class="outcome-item secondary-outcome">
+<div class="outcome-name">🌍 全球验证安全性</div>
+<div class="outcome-desc">54个国家上市，超20年临床经验，孤儿药资格认定，安全性得到广泛验证。</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
